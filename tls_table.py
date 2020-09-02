@@ -1,12 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from __future__ import print_function
-
-from bs4 import BeautifulSoup as bs
-from collections import OrderedDict
-import json
-import requests
 import sys
+from collections import OrderedDict
+from bs4 import BeautifulSoup as bs
+import requests
 
 IANA_URL = 'http://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml'
 OPENSSL_URL = 'https://raw.githubusercontent.com/openssl/openssl/master/include/openssl/tls1.h'
@@ -45,8 +42,8 @@ def get_hex_values():
         for line in r.text.split('\n'):
             if line.startswith('# define TLS1_CK'):
                 cipher = line.split()[2].split('TLS1_CK_')[-1]
-                hex = line.split()[3]
-                code_point = '0x' + hex[6:8] + ',0x' + hex[8:10]
+                hex_code = line.split()[3]
+                code_point = '0x' + hex_code[6:8] + ',0x' + hex_code[8:10]
 
                 # e.g., ECDHE_RSA_WITH_AES_128_GCM_SHA256 -> 0x0C,0x2F
                 openssl_hex_values[cipher] = code_point
@@ -57,15 +54,15 @@ def get_hex_values():
                 # e.g., ECDHE_RSA_WITH_AES_128_GCM_SHA256 -> ECDHE-RSA-AES128-GCM-SHA256
                 openssl_txt_values[cipher] = text
 
-        for key in openssl_hex_values.iterkeys():
-            if openssl_hex_values[key] in cipher_hex_values:
-                cipher_hex_values[openssl_hex_values[key]]['OpenSSL'] = openssl_txt_values[key]
+        for key, value in openssl_hex_values.items():
+            if value in cipher_hex_values:
+                cipher_hex_values[value]['OpenSSL'] = openssl_txt_values[key]
             else:
                 print('  Warning: code point {code_point} ({cipher}) not in IANA registry'.format(
-                    code_point=openssl_hex_values[key], cipher=key
+                    code_point=value, cipher=key
                 ), file=sys.stderr)
     except:
-        print('Unable to retrieve or parse OpenSSL cipher list', file=sys.stderr)
+        print('Unable to retrieve or parse OpenSSL cipher list: {}'.format(sys.exc_info()[0]), file=sys.stderr)
 
     print('\n', file=sys.stderr)
     return cipher_hex_values

@@ -10,5 +10,5 @@ $ python3 -m pip install --user -r requirements.txt
 
 ## Usage
 ```
-$ python3 tls-table.py > foo.csv
+$ ./tls-table.py > foo.csv
 ```
