@@ -1,20 +1,14 @@
-TLS Table
+# tls-table
 ---------
 
-`tls-table.py` is a script that generates either JSON or Mediawiki output mapping the IANA code points to their names in GnuTLS, NSS, and OpenSSL.
+`tls-table.py` is a script that generates csv output mapping the IANA code points to their names in OpenSSL.
 
+## Install
 ```
-$ python tls-table.py
-Generate a table of cipher names from all the major library makers.
-
-Usage: tls-table.py <output-format> [--colorize]
-
-Valid output formats are: json, mediawiki
+$ python3 -m pip install --user -r requirements.txt
 ```
 
-Currently,
-
+## Usage
 ```
-$ python tls-table.py mediawiki --colorize
+$ python3 tls-table.py > foo.csv
 ```
-... is used to generate the table at: https://wiki.mozilla.org/Security/Server_Side_TLS#Cipher_names_correspondence_table
